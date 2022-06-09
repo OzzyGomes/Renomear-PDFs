@@ -1,9 +1,6 @@
 import win32com.client
-import re
 import datetime
 import os
-import email
-from time import sleep
 
 
 path = os.path.expanduser(os.path.join(os.getcwd(), "Boletos").replace('\\',"/"))
@@ -43,23 +40,24 @@ def createReply(email):
         reply.Send()
         
 
-for i in range(2):
-    for item in items:
 
-        RT = item.ReceivedTime
-        Msgdate = datetime.datetime(RT.year ,RT.month, RT.day, RT.hour, RT.minute, RT.second)
-        msgdate = Msgdate.strftime('%Y%m%d')
-
-        if today == msgdate:
-            #item.Unread = True
-            for attachment in item.Attachments:
-                if attachment.FileName.lower().endswith('.pdf'):
-                    attachment.SaveAsFile(os.path.join(path, str(attachment)))
-                    createReply(item)
-                    item.Move(folder_PDFs)
-                    #item.Unread 
-                    print(attachment.FileName)
-                    sleep(1)
+for item in items:
+    
+    RT = item.ReceivedTime
+    Msgdate = datetime.datetime(RT.year ,RT.month, RT.day, RT.hour, RT.minute, RT.second)
+    msgdate = Msgdate.strftime('%Y%m%d')
+    
+    if today == msgdate:
+        #item.Unread = True
+        for attachment in item.Attachments:
+            if attachment.FileName.lower().endswith('.pdf'):
+                attachment.SaveAsFile(os.path.join(path, str(attachment)))
+                createReply(item)
+                item.Move(folder_PDFs)
+                item.Unread 
+                print(attachment.FileName)
+                
+                
 
 
 
